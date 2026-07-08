@@ -1,4 +1,4 @@
-const CACHE = 'flow-v6';
+const CACHE = 'flow-v7';
 const SHELL = ['./index.html', './app.js', './styles.css', './manifest.json', './icon.svg'];
 
 self.addEventListener('install', (e) => {

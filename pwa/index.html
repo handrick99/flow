@@ -11,24 +11,20 @@
   <title>Flow</title>
   <link rel="manifest" href="manifest.json" />
   <link rel="apple-touch-icon" href="icon.svg" />
-  <link rel="stylesheet" href="styles.css?v=6" />
+  <link rel="stylesheet" href="styles.css?v=7" />
 </head>
 <body>
-  <header class="topbar">
-    <span class="topbar-brand">Flow</span>
-    <span class="build-tag" aria-hidden="true">v6</span>
+  <header class="app-header">
+    <div class="header-brand">Flow</div>
+    <nav class="tabbar" aria-label="Main">
+      <button class="tab active" data-tab="today">Today</button>
+      <button class="tab" data-tab="week">Week</button>
+      <button class="tab" data-tab="goals">Goals</button>
+    </nav>
   </header>
 
   <main id="screen"></main>
 
-  <nav class="bottombar" aria-label="Main">
-    <div class="bottombar-inner">
-      <button class="bottom-tab active" data-tab="today">Today</button>
-      <button class="bottom-tab" data-tab="week">Week</button>
-      <button class="bottom-tab" data-tab="goals">Goals</button>
-    </div>
-  </nav>
-
-  <script src="app.js?v=6"></script>
+  <script src="app.js?v=7"></script>
 </body>
 </html>

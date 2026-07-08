@@ -13,9 +13,9 @@
   --font: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'SF Pro Display', system-ui, sans-serif;
   --safe-top: env(safe-area-inset-top, 0px);
   --safe-bottom: env(safe-area-inset-bottom, 0px);
-  --tab-bar-h: 49px;
-  --topbar-h: calc(var(--safe-top) + 41px);
-  --bottombar-h: calc(var(--tab-bar-h) + var(--safe-bottom));
+  --tab-bar-h: 44px;
+  --brand-h: 41px;
+  --header-h: calc(var(--safe-top) + var(--brand-h) + var(--tab-bar-h));
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -30,7 +30,8 @@ html, body {
   position: fixed;
   inset: 0;
   width: 100%;
-  height: var(--app-h, 100dvh);
+  height: 100%;
+  height: 100dvh;
   overflow: hidden;
   background: var(--bg);
   color: var(--text);
@@ -43,69 +44,34 @@ html, body {
   overscroll-behavior: none;
 }
 
-/* —— Top bar —— */
-.topbar {
+/* —— Top header + tabs —— */
+.app-header {
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
   z-index: 200;
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-  padding: calc(var(--safe-top) + 12px) 22px 12px;
   background: var(--bg);
   border-bottom: 1px solid var(--line-soft);
-  transition: transform 0.25s ease, opacity 0.25s ease;
+  padding-top: var(--safe-top);
 }
 
-.topbar.hidden {
-  transform: translateY(-100%);
-  opacity: 0;
-  pointer-events: none;
-  border-bottom-color: transparent;
-}
-
-.topbar-brand {
+.header-brand {
+  padding: 12px 22px 8px;
   font-size: 17px;
   font-weight: 600;
   letter-spacing: -0.02em;
 }
 
-.build-tag {
-  margin-left: auto;
-  font-size: 11px;
-  color: var(--text-dim);
-  font-weight: 400;
-}
-
-/* —— Bottom nav ——
-   Bar is flush with screen bottom (bottom: 0).
-   Black background fills the home-indicator zone.
-   Tabs sit in the row above env(safe-area-inset-bottom). */
-.bottombar {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  z-index: 9999;
-  background: var(--bg);
-  border-top: 1px solid var(--line-soft);
-  padding-bottom: var(--safe-bottom);
-  touch-action: none;
-  transform: translateZ(0);
-}
-
-.bottombar-inner {
+.tabbar {
   display: flex;
-  align-items: center;
   max-width: 430px;
   margin: 0 auto;
   height: var(--tab-bar-h);
   padding: 0 22px;
 }
 
-.bottom-tab {
+.tab {
   flex: 1;
   background: none;
   border: none;
@@ -123,8 +89,8 @@ html, body {
   transition: color 0.2s ease;
 }
 
-.bottom-tab.active { color: var(--text); font-weight: 600; }
-.bottom-tab:active { color: var(--text-body); }
+.tab.active { color: var(--text); font-weight: 600; }
+.tab:active { color: var(--text-body); }
 
 #screen {
   position: fixed;
@@ -133,34 +99,8 @@ html, body {
   max-width: 430px;
   margin: 0 auto;
   overflow-y: auto;
-  padding: var(--topbar-h) 22px var(--bottombar-h);
+  padding: var(--header-h) 22px calc(var(--safe-bottom) + 20px);
   -webkit-overflow-scrolling: touch;
-}
-
-/* Home screen app — display: standalone triggers safe-area env() on iOS */
-@media (display-mode: standalone) {
-  html.standalone,
-  html.standalone body {
-    height: 100%;
-    height: 100dvh;
-    height: -webkit-fill-available;
-  }
-
-  html.standalone .bottombar {
-    bottom: 0;
-    padding-bottom: var(--safe-bottom);
-  }
-
-  html.standalone .bottombar-inner {
-    height: var(--tab-bar-h);
-    align-items: flex-end;
-    padding-bottom: 2px;
-  }
-
-  html.standalone .bottom-tab {
-    height: auto;
-    align-items: flex-end;
-  }
 }
 
 .page-date {
@@ -720,5 +660,5 @@ html, body {
 
 @media (prefers-reduced-motion: reduce) {
   .day-volume-fill, .day-timeline-lost, .day-timeline-now { transition: none; }
-  .topbar { transition: none; }
+  .app-header { transition: none; }
 }

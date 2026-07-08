@@ -459,7 +459,6 @@ function render() {
   else if (tab === 'week') screen.innerHTML = renderWeek();
   else screen.innerHTML = renderGoals();
   screen.scrollTop = 0;
-  updateTopbarVisibility();
   bind();
   startTick();
 }
@@ -474,13 +473,6 @@ function selectActivity(id) {
   });
   const btn = document.getElementById('timer-btn');
   if (btn) btn.disabled = !id;
-}
-
-function updateTopbarVisibility() {
-  const screen = document.getElementById('screen');
-  const topbar = document.querySelector('.topbar');
-  if (!screen || !topbar) return;
-  topbar.classList.toggle('hidden', screen.scrollTop > 20);
 }
 
 function bind() {
@@ -607,55 +599,15 @@ function bind() {
   });
 }
 
-document.querySelectorAll('.bottom-tab').forEach((btn) => {
+document.querySelectorAll('.tab').forEach((btn) => {
   btn.onclick = () => {
     const next = btn.dataset.tab;
     if (next === tab) return;
     tab = next;
-    document.querySelectorAll('.bottom-tab').forEach((b) => b.classList.toggle('active', b === btn));
+    document.querySelectorAll('.tab').forEach((b) => b.classList.toggle('active', b === btn));
     render();
   };
 });
-
-let scrollPending = false;
-document.getElementById('screen')?.addEventListener('scroll', () => {
-  if (scrollPending) return;
-  scrollPending = true;
-  requestAnimationFrame(() => {
-    updateTopbarVisibility();
-    scrollPending = false;
-  });
-}, { passive: true });
-
-function measureSafeAreas() {
-  const standalone =
-    window.navigator.standalone === true ||
-    window.matchMedia('(display-mode: standalone)').matches;
-
-  document.documentElement.classList.toggle('standalone', standalone);
-
-  const probe = document.createElement('div');
-  probe.style.cssText =
-    'position:fixed;visibility:hidden;pointer-events:none;padding:env(safe-area-inset-top) 0 env(safe-area-inset-bottom)';
-  document.documentElement.appendChild(probe);
-  const cs = getComputedStyle(probe);
-  let top = parseFloat(cs.paddingTop) || 0;
-  let bottom = parseFloat(cs.paddingBottom) || 0;
-  probe.remove();
-
-  if (standalone && bottom === 0) bottom = 34;
-  if (standalone && top === 0) top = 59;
-
-  document.documentElement.style.setProperty('--safe-top', `${top}px`);
-  document.documentElement.style.setProperty('--safe-bottom', `${bottom}px`);
-  document.documentElement.style.setProperty('--bottombar-h', `calc(var(--tab-bar-h) + ${bottom}px)`);
-  document.documentElement.style.setProperty('--topbar-h', `calc(${top}px + 41px)`);
-  document.documentElement.style.setProperty('--app-h', `${window.innerHeight}px`);
-}
-
-measureSafeAreas();
-window.addEventListener('resize', measureSafeAreas);
-window.addEventListener('orientationchange', () => setTimeout(measureSafeAreas, 200));
 
 if ('serviceWorker' in navigator) {
   navigator.serviceWorker.register('./sw.js', { scope: './' }).catch(() => {});
