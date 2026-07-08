@@ -13,21 +13,24 @@
   --font: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'SF Pro Display', system-ui, sans-serif;
   --safe-top: env(safe-area-inset-top, 0px);
   --safe-bottom: env(safe-area-inset-bottom, 0px);
-  --topbar-h: calc(var(--safe-top) + 12px + 17px + 12px);
-  --bottombar-inner: 40px;
-  --bottombar-h: calc(var(--bottombar-inner) + var(--safe-bottom));
+  --tab-bar-h: 49px;
+  --topbar-h: calc(var(--safe-top) + 41px);
+  --bottombar-h: calc(var(--tab-bar-h) + var(--safe-bottom));
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
 
 html {
   height: 100%;
+  height: 100dvh;
   background: var(--bg);
 }
 
 html, body {
+  position: fixed;
+  inset: 0;
   width: 100%;
-  height: 100%;
+  overflow: hidden;
   background: var(--bg);
   color: var(--text);
   font-family: var(--font);
@@ -37,73 +40,6 @@ html, body {
   letter-spacing: -0.022em;
   -webkit-font-smoothing: antialiased;
   overscroll-behavior: none;
-  overflow: hidden;
-}
-
-body {
-  position: relative;
-}
-
-/* Safari browser — bar sits at the bottom above the toolbar */
-.bottombar {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  z-index: 9999;
-  background: var(--bg);
-  border-top: 1px solid var(--line-soft);
-  touch-action: none;
-}
-
-.bottombar-inner {
-  display: flex;
-  align-items: center;
-  max-width: 430px;
-  margin: 0 auto;
-  height: var(--bottombar-inner);
-  padding: 0 22px;
-}
-
-/* Home screen app — full safe area, tabs just above home indicator */
-html.standalone,
-html.standalone body {
-  position: fixed;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-}
-
-html.standalone {
-  --safe-bottom: max(calc(env(safe-area-inset-bottom, 0px) - 14px), 4px);
-  --bottombar-inner: 36px;
-  --bottombar-h: calc(var(--bottombar-inner) + var(--safe-bottom));
-}
-
-html.standalone .bottombar {
-  padding-bottom: var(--safe-bottom);
-}
-
-html.standalone .bottombar-inner {
-  align-items: flex-end;
-  padding-bottom: 0;
-}
-
-html.standalone .bottom-tab {
-  height: auto;
-  align-items: flex-end;
-  padding-bottom: 0;
-}
-
-html.standalone #screen {
-  position: fixed;
-}
-
-#app {
-  position: relative;
-  height: 100%;
-  max-width: 430px;
-  margin: 0 auto;
 }
 
 /* —— Top bar —— */
@@ -113,9 +49,6 @@ html.standalone #screen {
   left: 0;
   right: 0;
   z-index: 200;
-  width: 100%;
-  max-width: 430px;
-  margin: 0 auto;
   display: flex;
   align-items: center;
   justify-content: flex-start;
@@ -123,7 +56,6 @@ html.standalone #screen {
   background: var(--bg);
   border-bottom: 1px solid var(--line-soft);
   transition: transform 0.25s ease, opacity 0.25s ease;
-  transform: translateZ(0);
 }
 
 .topbar.hidden {
@@ -139,7 +71,31 @@ html.standalone #screen {
   letter-spacing: -0.02em;
 }
 
-/* —— Bottom nav —— */
+/* —— Bottom nav ——
+   Bar is flush with screen bottom (bottom: 0).
+   Black background fills the home-indicator zone.
+   Tabs sit in the row above env(safe-area-inset-bottom). */
+.bottombar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 9999;
+  background: var(--bg);
+  border-top: 1px solid var(--line-soft);
+  padding-bottom: var(--safe-bottom);
+  touch-action: none;
+}
+
+.bottombar-inner {
+  display: flex;
+  align-items: center;
+  max-width: 430px;
+  margin: 0 auto;
+  height: var(--tab-bar-h);
+  padding: 0 22px;
+}
+
 .bottom-tab {
   flex: 1;
   background: none;
@@ -162,11 +118,8 @@ html.standalone #screen {
 .bottom-tab:active { color: var(--text-body); }
 
 #screen {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
+  position: fixed;
+  inset: 0;
   z-index: 1;
   max-width: 430px;
   margin: 0 auto;

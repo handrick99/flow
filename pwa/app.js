@@ -627,15 +627,6 @@ document.getElementById('screen')?.addEventListener('scroll', () => {
   });
 }, { passive: true });
 
-function initDisplayMode() {
-  const standalone =
-    window.navigator.standalone === true ||
-    window.matchMedia('(display-mode: standalone)').matches;
-  document.documentElement.classList.toggle('standalone', standalone);
-}
-
-initDisplayMode();
-
 if ('serviceWorker' in navigator) {
   navigator.serviceWorker.register('./sw.js', { scope: './' }).catch(() => {});
 }
