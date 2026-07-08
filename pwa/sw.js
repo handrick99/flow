@@ -1,4 +1,4 @@
-const CACHE = 'flow-offline-v2';
+const CACHE = 'flow-offline-v3';
 const ASSETS = [
   './',
   './index.html',

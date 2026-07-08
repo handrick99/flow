@@ -75,7 +75,8 @@ html.standalone body {
 }
 
 html.standalone {
-  --bottombar-inner: 44px;
+  --safe-bottom: max(calc(env(safe-area-inset-bottom, 0px) - 14px), 4px);
+  --bottombar-inner: 36px;
   --bottombar-h: calc(var(--bottombar-inner) + var(--safe-bottom));
 }
 
@@ -85,7 +86,7 @@ html.standalone .bottombar {
 
 html.standalone .bottombar-inner {
   align-items: flex-end;
-  padding-bottom: 1px;
+  padding-bottom: 0;
 }
 
 html.standalone .bottom-tab {
