@@ -631,19 +631,7 @@ function initDisplayMode() {
   const standalone =
     window.navigator.standalone === true ||
     window.matchMedia('(display-mode: standalone)').matches;
-
   document.documentElement.classList.toggle('standalone', standalone);
-
-  if (!standalone) return;
-
-  const syncAppHeight = () => {
-    const h = window.visualViewport?.height ?? window.innerHeight;
-    document.documentElement.style.setProperty('--app-h', `${Math.round(h)}px`);
-  };
-
-  syncAppHeight();
-  window.visualViewport?.addEventListener('resize', syncAppHeight);
-  window.addEventListener('orientationchange', () => setTimeout(syncAppHeight, 150));
 }
 
 initDisplayMode();

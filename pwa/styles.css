@@ -44,6 +44,60 @@ body {
   position: relative;
 }
 
+/* Safari browser — bar sits at the bottom above the toolbar */
+.bottombar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 9999;
+  background: var(--bg);
+  border-top: 1px solid var(--line-soft);
+  touch-action: none;
+}
+
+.bottombar-inner {
+  display: flex;
+  align-items: center;
+  max-width: 430px;
+  margin: 0 auto;
+  height: var(--bottombar-inner);
+  padding: 0 22px;
+}
+
+/* Home screen app — full safe area, tabs just above home indicator */
+html.standalone,
+html.standalone body {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+html.standalone {
+  --bottombar-inner: 44px;
+  --bottombar-h: calc(var(--bottombar-inner) + var(--safe-bottom));
+}
+
+html.standalone .bottombar {
+  padding-bottom: var(--safe-bottom);
+}
+
+html.standalone .bottombar-inner {
+  align-items: flex-end;
+  padding-bottom: 1px;
+}
+
+html.standalone .bottom-tab {
+  height: auto;
+  align-items: flex-end;
+  padding-bottom: 0;
+}
+
+html.standalone #screen {
+  position: fixed;
+}
+
 #app {
   position: relative;
   height: 100%;
@@ -85,27 +139,6 @@ body {
 }
 
 /* —— Bottom nav —— */
-.bottombar {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  z-index: 9999;
-  background: var(--bg);
-  border-top: 1px solid var(--line-soft);
-  padding-bottom: var(--safe-bottom);
-  touch-action: none;
-}
-
-.bottombar-inner {
-  display: flex;
-  align-items: center;
-  max-width: 430px;
-  margin: 0 auto;
-  height: var(--bottombar-inner);
-  padding: 0 22px;
-}
-
 .bottom-tab {
   flex: 1;
   background: none;
@@ -122,23 +155,6 @@ body {
   justify-content: center;
   letter-spacing: -0.01em;
   transition: color 0.2s ease;
-}
-
-/* Home screen app: Safari uses a different viewport than standalone */
-html.standalone,
-html.standalone body {
-  position: fixed;
-  inset: 0;
-  width: 100%;
-  height: var(--app-h, 100%);
-}
-
-html.standalone .bottombar {
-  bottom: 0;
-}
-
-html.standalone #screen {
-  height: var(--app-h, 100%);
 }
 
 .bottom-tab.active { color: var(--text); font-weight: 600; }
