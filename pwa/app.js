@@ -26,6 +26,7 @@ let selectedId = state.activities[0]?.id ?? null;
 let timerInterval = null;
 let dayInterval = null;
 let swipeBound = false;
+let pageAnimating = false;
 
 function dayProgress() {
   const now = new Date();
@@ -237,13 +238,14 @@ function legend(slices) {
   `).join('')}</div>`;
 }
 
-function bars(items, max) {
-  const m = max ?? Math.max(...items.map((b) => b.value), 1);
+function bars(items, options = {}) {
+  const max = options.max ?? Math.max(...items.map((b) => b.value), 1);
+  const formatVal = options.formatVal ?? ((v) => (v > 0 ? v.toFixed(1) : ''));
   return `<div class="bars">${items.map((b) => {
-    const pct = m > 0 ? b.value / m : 0;
+    const pct = max > 0 ? b.value / max : 0;
     const h = Math.max(pct * 100, b.value > 0 ? 4 : 0);
     return `<div class="bar-col">
-      <span class="bar-val">${b.value > 0 ? b.value.toFixed(1) : ''}</span>
+      <span class="bar-val">${formatVal(b.value)}</span>
       <div class="bar-track"><div class="bar-fill" style="height:${h}%;background:${b.color || 'var(--accent)'}"></div></div>
       <span class="bar-label">${b.label}</span>
       ${b.sub ? `<span class="bar-sub">${b.sub}</span>` : ''}
@@ -272,7 +274,8 @@ function renderToday() {
 
   const goals = state.activities.map((a) => {
     const done = logs.filter((l) => l.activityId === a.id).reduce((s, l) => s + l.durationMinutes, 0);
-    return { label: a.name.slice(0, 3), value: toHours(done), color: a.color, sub: `${Math.min(100, Math.round((done / a.targetMinutes) * 100))}%` };
+    const pct = a.targetMinutes > 0 ? Math.min(100, Math.round((done / a.targetMinutes) * 100)) : 0;
+    return { label: a.name.slice(0, 3), value: pct, color: a.color, sub: fmtDur(done) };
   });
 
   return `
@@ -302,7 +305,7 @@ function renderToday() {
     <div class="section">
       <h2 class="headline">Daily goals</h2>
       <p class="headline-sub">Progress toward what matters.</p>
-      ${bars(goals, 4)}
+      ${bars(goals, { max: 100, formatVal: (v) => (v > 0 ? `${v}%` : '') })}
     </div>
 
     <div class="section">
@@ -455,14 +458,62 @@ function renderGoals() {
     </div>`;
 }
 
-function render() {
+function tabHtml(nextTab) {
+  if (nextTab === 'today') return renderToday();
+  if (nextTab === 'week') return renderWeek();
+  return renderGoals();
+}
+
+function mountTab(nextTab) {
   const screen = document.getElementById('screen');
-  if (tab === 'today') screen.innerHTML = renderToday();
-  else if (tab === 'week') screen.innerHTML = renderWeek();
-  else screen.innerHTML = renderGoals();
+  screen.innerHTML = tabHtml(nextTab);
   screen.scrollTop = 0;
   bind();
   startTick();
+}
+
+function render() {
+  mountTab(tab);
+}
+
+function switchTab(direction) {
+  if (pageAnimating) return;
+  const idx = TABS.indexOf(tab);
+  if (idx === -1) return;
+  const nextIdx = idx + direction;
+  if (nextIdx < 0 || nextIdx >= TABS.length) return;
+
+  const screen = document.getElementById('screen');
+  const nextTab = TABS[nextIdx];
+  const shift = direction > 0 ? -1 : 1;
+
+  pageAnimating = true;
+  screen.classList.remove('page-enter', 'page-enter-active');
+  screen.classList.add('page-exit');
+  screen.style.setProperty('--page-shift', String(shift));
+
+  requestAnimationFrame(() => {
+    screen.classList.add('page-exit-active');
+  });
+
+  window.setTimeout(() => {
+    tab = nextTab;
+    mountTab(tab);
+
+    screen.classList.remove('page-exit', 'page-exit-active');
+    screen.classList.add('page-enter');
+    screen.style.setProperty('--page-shift', String(-shift));
+
+    requestAnimationFrame(() => {
+      screen.classList.add('page-enter-active');
+    });
+
+    window.setTimeout(() => {
+      screen.classList.remove('page-enter', 'page-enter-active');
+      screen.style.removeProperty('--page-shift');
+      pageAnimating = false;
+    }, 280);
+  }, 220);
 }
 
 function selectActivity(id) {
@@ -475,15 +526,6 @@ function selectActivity(id) {
   });
   const btn = document.getElementById('timer-btn');
   if (btn) btn.disabled = !id;
-}
-
-function switchTab(direction) {
-  const idx = TABS.indexOf(tab);
-  if (idx === -1) return;
-  const next = idx + direction;
-  if (next < 0 || next >= TABS.length) return;
-  tab = TABS[next];
-  render();
 }
 
 function bindSwipeNavigation() {
@@ -505,7 +547,7 @@ function bindSwipeNavigation() {
   }, { passive: true });
 
   screen.addEventListener('touchend', (e) => {
-    if (!tracking || e.changedTouches.length !== 1) return;
+    if (!tracking || pageAnimating || e.changedTouches.length !== 1) return;
     tracking = false;
 
     const dx = e.changedTouches[0].clientX - startX;
