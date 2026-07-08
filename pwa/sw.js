@@ -1,5 +1,5 @@
-const CACHE = 'flow-v10';
-const SHELL = ['./index.html', './app.js', './styles.css', './manifest.json', './icon.svg'];
+const CACHE = 'flow-v11';
+const SHELL = ['./index.html', './app.js', './styles.css', './manifest.json', './apple-touch-icon.png', './icon-512.png', './icon.png'];
 
 self.addEventListener('install', (e) => {
   e.waitUntil(caches.open(CACHE).then((c) => c.addAll(SHELL)));
