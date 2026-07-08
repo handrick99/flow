@@ -21,9 +21,11 @@ const DEFAULT = {
 
 let state = load();
 let tab = 'today';
+const TABS = ['today', 'week', 'goals'];
 let selectedId = state.activities[0]?.id ?? null;
 let timerInterval = null;
 let dayInterval = null;
+let swipeBound = false;
 
 function dayProgress() {
   const now = new Date();
@@ -475,6 +477,50 @@ function selectActivity(id) {
   if (btn) btn.disabled = !id;
 }
 
+function switchTab(direction) {
+  const idx = TABS.indexOf(tab);
+  if (idx === -1) return;
+  const next = idx + direction;
+  if (next < 0 || next >= TABS.length) return;
+  tab = TABS[next];
+  render();
+}
+
+function bindSwipeNavigation() {
+  if (swipeBound) return;
+  const screen = document.getElementById('screen');
+  if (!screen) return;
+
+  let startX = 0;
+  let startY = 0;
+  let tracking = false;
+
+  screen.addEventListener('touchstart', (e) => {
+    if (e.touches.length !== 1) return;
+    const target = e.target;
+    if (target instanceof Element && target.closest('input, textarea, select, button')) return;
+    startX = e.touches[0].clientX;
+    startY = e.touches[0].clientY;
+    tracking = true;
+  }, { passive: true });
+
+  screen.addEventListener('touchend', (e) => {
+    if (!tracking || e.changedTouches.length !== 1) return;
+    tracking = false;
+
+    const dx = e.changedTouches[0].clientX - startX;
+    const dy = e.changedTouches[0].clientY - startY;
+    const absX = Math.abs(dx);
+    const absY = Math.abs(dy);
+
+    if (absX < 70 || absX < absY * 1.3) return;
+    if (dx < 0) switchTab(1);
+    else switchTab(-1);
+  }, { passive: true });
+
+  swipeBound = true;
+}
+
 function bind() {
   document.querySelectorAll('[data-select]').forEach((el) => {
     el.onclick = () => selectActivity(el.dataset.select);
@@ -599,18 +645,9 @@ function bind() {
   });
 }
 
-document.querySelectorAll('.tab').forEach((btn) => {
-  btn.onclick = () => {
-    const next = btn.dataset.tab;
-    if (next === tab) return;
-    tab = next;
-    document.querySelectorAll('.tab').forEach((b) => b.classList.toggle('active', b === btn));
-    render();
-  };
-});
-
 if ('serviceWorker' in navigator) {
   navigator.serviceWorker.register('./sw.js', { scope: './' }).catch(() => {});
 }
 
+bindSwipeNavigation();
 render();

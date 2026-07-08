@@ -13,9 +13,8 @@
   --font: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'SF Pro Display', system-ui, sans-serif;
   --safe-top: env(safe-area-inset-top, 0px);
   --safe-bottom: env(safe-area-inset-bottom, 0px);
-  --tab-bar-h: 44px;
   --brand-h: 41px;
-  --header-h: calc(var(--safe-top) + var(--brand-h) + var(--tab-bar-h));
+  --header-h: calc(var(--safe-top) + var(--brand-h));
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -57,40 +56,11 @@ html, body {
 }
 
 .header-brand {
-  padding: 12px 22px 8px;
+  padding: 12px 22px;
   font-size: 17px;
   font-weight: 600;
   letter-spacing: -0.02em;
 }
-
-.tabbar {
-  display: flex;
-  max-width: 430px;
-  margin: 0 auto;
-  height: var(--tab-bar-h);
-  padding: 0 22px;
-}
-
-.tab {
-  flex: 1;
-  background: none;
-  border: none;
-  color: var(--text-dim);
-  font-family: var(--font);
-  font-size: 14px;
-  font-weight: 400;
-  cursor: pointer;
-  padding: 0;
-  height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  letter-spacing: -0.01em;
-  transition: color 0.2s ease;
-}
-
-.tab.active { color: var(--text); font-weight: 600; }
-.tab:active { color: var(--text-body); }
 
 #screen {
   position: fixed;
