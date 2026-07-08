@@ -75,36 +75,12 @@ html, body {
   scrollbar-width: none;
   -ms-overflow-style: none;
   touch-action: pan-y;
-  will-change: transform, opacity;
 }
 
 #screen::-webkit-scrollbar {
   display: none;
   width: 0;
   height: 0;
-}
-
-#screen.page-exit {
-  opacity: 1;
-  transform: translateX(0);
-  transition: opacity 0.22s ease-in, transform 0.22s ease-in;
-}
-
-#screen.page-exit-active {
-  opacity: 0.88;
-  transform: translateX(calc(var(--page-shift, 0) * 18px));
-}
-
-#screen.page-enter {
-  opacity: 0.88;
-  transform: translateX(calc(var(--page-shift, 0) * 18px));
-  transition: none;
-}
-
-#screen.page-enter-active {
-  opacity: 1;
-  transform: translateX(0);
-  transition: opacity 0.28s cubic-bezier(0.22, 1, 0.36, 1), transform 0.28s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .page-date {
@@ -666,9 +642,5 @@ html, body {
 @media (prefers-reduced-motion: reduce) {
   .day-volume-fill, .day-timeline-lost, .day-timeline-now { transition: none; }
   .bar-fill { transition: none; }
-  #screen.page-exit,
-  #screen.page-exit-active,
-  #screen.page-enter,
-  #screen.page-enter-active { transition: none; transform: none; opacity: 1; }
   .app-header { transition: none; }
 }
