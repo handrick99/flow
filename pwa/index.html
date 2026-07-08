@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="theme-color" content="#000000" />
+  <title>Flow</title>
+  <link rel="manifest" href="manifest.json" />
+  <link rel="apple-touch-icon" href="icon.svg" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="topbar">
+    <span class="topbar-brand">Flow</span>
+  </header>
+
+  <main id="screen"></main>
+
+  <nav class="bottombar" aria-label="Main">
+    <div class="bottombar-inner">
+      <button class="bottom-tab active" data-tab="today">Today</button>
+      <button class="bottom-tab" data-tab="week">Week</button>
+      <button class="bottom-tab" data-tab="goals">Goals</button>
+    </div>
+  </nav>
+
+  <script src="app.js"></script>
+</body>
+</html>
