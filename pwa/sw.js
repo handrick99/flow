@@ -1,17 +1,9 @@
-const CACHE = 'flow-offline-v4';
-const ASSETS = [
-  './',
-  './index.html',
-  './app.js',
-  './styles.css',
-  './manifest.json',
-  './icon.svg',
-];
+const CACHE = 'flow-v6';
+const SHELL = ['./index.html', './app.js', './styles.css', './manifest.json', './icon.svg'];
 
 self.addEventListener('install', (e) => {
-  e.waitUntil(
-    caches.open(CACHE).then((cache) => cache.addAll(ASSETS)).then(() => self.skipWaiting())
-  );
+  e.waitUntil(caches.open(CACHE).then((c) => c.addAll(SHELL)));
+  self.skipWaiting();
 });
 
 self.addEventListener('activate', (e) => {
@@ -24,26 +16,23 @@ self.addEventListener('activate', (e) => {
 
 self.addEventListener('fetch', (e) => {
   if (e.request.method !== 'GET') return;
-
   const url = new URL(e.request.url);
   if (url.origin !== self.location.origin) return;
 
   e.respondWith(
-    caches.match(e.request).then((cached) => {
-      if (cached) return cached;
-
-      return fetch(e.request)
-        .then((res) => {
-          if (res && res.status === 200 && res.type === 'basic') {
-            const copy = res.clone();
-            caches.open(CACHE).then((cache) => cache.put(e.request, copy));
-          }
-          return res;
-        })
-        .catch(() => {
+    fetch(e.request)
+      .then((res) => {
+        if (res && res.status === 200) {
+          const copy = res.clone();
+          caches.open(CACHE).then((c) => c.put(e.request, copy));
+        }
+        return res;
+      })
+      .catch(() =>
+        caches.match(e.request).then((cached) => {
+          if (cached) return cached;
           if (e.request.mode === 'navigate') return caches.match('./index.html');
-          return caches.match(e.request);
-        });
-    })
+        })
+      )
   );
 });

@@ -1,10 +1,12 @@
 {
+  "id": "/flow/",
   "name": "Flow",
   "short_name": "Flow",
   "description": "Simple daily time tracker",
   "start_url": "./index.html",
   "scope": "./",
   "display": "standalone",
+  "display_override": ["standalone", "fullscreen", "minimal-ui"],
   "background_color": "#000000",
   "theme_color": "#000000",
   "orientation": "portrait",

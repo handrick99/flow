@@ -30,6 +30,7 @@ html, body {
   position: fixed;
   inset: 0;
   width: 100%;
+  height: var(--app-h, 100dvh);
   overflow: hidden;
   background: var(--bg);
   color: var(--text);
@@ -71,6 +72,13 @@ html, body {
   letter-spacing: -0.02em;
 }
 
+.build-tag {
+  margin-left: auto;
+  font-size: 11px;
+  color: var(--text-dim);
+  font-weight: 400;
+}
+
 /* —— Bottom nav ——
    Bar is flush with screen bottom (bottom: 0).
    Black background fills the home-indicator zone.
@@ -85,6 +93,7 @@ html, body {
   border-top: 1px solid var(--line-soft);
   padding-bottom: var(--safe-bottom);
   touch-action: none;
+  transform: translateZ(0);
 }
 
 .bottombar-inner {
@@ -126,6 +135,32 @@ html, body {
   overflow-y: auto;
   padding: var(--topbar-h) 22px var(--bottombar-h);
   -webkit-overflow-scrolling: touch;
+}
+
+/* Home screen app — display: standalone triggers safe-area env() on iOS */
+@media (display-mode: standalone) {
+  html.standalone,
+  html.standalone body {
+    height: 100%;
+    height: 100dvh;
+    height: -webkit-fill-available;
+  }
+
+  html.standalone .bottombar {
+    bottom: 0;
+    padding-bottom: var(--safe-bottom);
+  }
+
+  html.standalone .bottombar-inner {
+    height: var(--tab-bar-h);
+    align-items: flex-end;
+    padding-bottom: 2px;
+  }
+
+  html.standalone .bottom-tab {
+    height: auto;
+    align-items: flex-end;
+  }
 }
 
 .page-date {
