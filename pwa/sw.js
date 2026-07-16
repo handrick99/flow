@@ -1,4 +1,4 @@
-const CACHE = 'flow-v11';
+const CACHE = 'flow-v12';
 const SHELL = ['./index.html', './app.js', './styles.css', './manifest.json', './apple-touch-icon.png', './icon-512.png', './icon.png'];
 
 self.addEventListener('install', (e) => {

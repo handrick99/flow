@@ -51,7 +51,6 @@ html, body {
   right: 0;
   z-index: 200;
   background: var(--bg);
-  border-bottom: 1px solid var(--line-soft);
   padding-top: var(--safe-top);
 }
 
@@ -129,12 +128,10 @@ html, body {
 /* —— Sections —— */
 .section {
   padding: 36px 0;
-  border-top: 1px solid var(--line-soft);
 }
 
 .section:first-of-type,
 .section-first {
-  border-top: none;
   padding-top: 8px;
 }
 
@@ -471,16 +468,13 @@ html, body {
   align-items: center;
   gap: 14px;
   padding: 16px 0;
-  border-bottom: 1px solid var(--line-soft);
   width: 100%;
   text-align: left;
   color: var(--text);
   font-family: var(--font);
   font-size: 17px;
   background: none;
-  border-left: none;
-  border-right: none;
-  border-top: none;
+  border: none;
 }
 
 .check-row { cursor: pointer; }
@@ -565,10 +559,7 @@ html, body {
 
 .goal-row {
   padding: 16px 0;
-  border-bottom: 1px solid var(--line-soft);
 }
-
-.goal-row:last-child { border-bottom: none; }
 
 .goal-header {
   display: flex;
@@ -616,7 +607,6 @@ html, body {
 
 .activity-block {
   padding: 20px 0;
-  border-bottom: 1px solid var(--line-soft);
 }
 
 .activity-header {
